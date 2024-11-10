@@ -4,12 +4,12 @@ This project aims to demonstrate how to implement dynamic Temporal workflow to r
 
 #### The implementation is not completed, below is the list of supported features:
 
-|   | BPM                                    | Temporal implementation                                                            |        |   
-|---|----------------------------------------|------------------------------------------------------------------------------------|--------|
-|   | ServiceTask                            | Activity                                                                           |        |
-|   | HumanTask                              | Activity + Dynamic Signal Handler + Workflow.await(()->{})                         |        |
-|   | HumanTask with boundary timer(timeout) | Activity + Dynamic Signal Handler + Workflow.await(duration, ()->{}) with duration | WIP ⚠️ |
-|   | Timer                                  | Workflow.sleep                                                                     |        |
+|        | BPM                                    | Temporal implementation                                                            |   
+|--------|----------------------------------------|------------------------------------------------------------------------------------|
+|        | ServiceTask                            | Activity                                                                           |
+|        | HumanTask                              | Activity + Dynamic Signal Handler + Workflow.await(()->{})                         |
+| WIP ⚠️ | HumanTask with boundary timer(timeout) | Activity + Dynamic Signal Handler + Workflow.await(duration, ()->{}) with duration |
+|        | Timer                                  | Workflow.sleep                                                                     |
 
 #### Below are some workflows that we have tested with this engine.
 
