@@ -5,6 +5,7 @@
 - [BPMN Parallel](./src/main/java/com/antmendoza/temporal/parallel/README.md)
 - [BPMN Condition](./src/main/java/com/antmendoza/temporal/condition/README.md)
 - [BPMN Iteration](./src/main/java/com/antmendoza/temporal/iteration/README.md)
+- [BPMN Human Task](./src/main/java/com/antmendoza/temporal/humantask/README.md)
 - Event-Driven Workflow
 - Case Management Workflow
 - Exception Handling Workflow
