@@ -1,9 +1,9 @@
-package com.antmendoza.temporal.humantask;
+package com.antmendoza.temporal.humantask.basicimplementation;
 
 
-import com.antmendoza.temporal.humantask.workflow.HumanTaskWorkflow;
-import com.antmendoza.temporal.humantask.workflow.TaskInput;
-import com.antmendoza.temporal.humantask.workflow.WorkflowInput;
+import com.antmendoza.temporal.humantask.basicimplementation.workflow.HumanTaskWorkflow;
+import com.antmendoza.temporal.humantask.basicimplementation.workflow.TaskInput;
+import com.antmendoza.temporal.humantask.basicimplementation.workflow.WorkflowInput;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;

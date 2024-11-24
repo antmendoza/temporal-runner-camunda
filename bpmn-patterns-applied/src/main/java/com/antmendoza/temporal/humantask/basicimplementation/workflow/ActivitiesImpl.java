@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.humantask.workflow;
+package com.antmendoza.temporal.humantask.basicimplementation.workflow;
 
 import com.thedeanda.lorem.LoremIpsum;
 import org.slf4j.Logger;

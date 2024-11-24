@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.humantask.workflow;
+package com.antmendoza.temporal.humantask.advancedimplementation.workflow;
 
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
