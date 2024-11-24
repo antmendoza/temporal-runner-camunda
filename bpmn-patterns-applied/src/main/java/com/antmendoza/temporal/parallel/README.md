@@ -1,3 +1,3 @@
-# BPMN Condition
+# BPMN Parallel
 
-![condition.png](../../../../../../../docs/condition.png)
+![parallel.png](../../../../../../../docs/parallel.png)
