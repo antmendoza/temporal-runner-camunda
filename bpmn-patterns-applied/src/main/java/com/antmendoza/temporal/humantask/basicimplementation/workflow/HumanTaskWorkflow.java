@@ -1,5 +1,7 @@
 package com.antmendoza.temporal.humantask.basicimplementation.workflow;
 
+import com.antmendoza.temporal.humantask.TaskInput;
+import com.antmendoza.temporal.humantask.WorkflowInput;
 import io.temporal.workflow.QueryMethod;
 import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
@@ -14,7 +16,8 @@ public interface HumanTaskWorkflow {
 
 
     @SignalMethod
-    void taskInput(TaskInput taskInput);
+    void taskInput(
+            TaskInput taskInput);
 
 
     @QueryMethod

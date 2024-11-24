@@ -1,5 +1,9 @@
 package com.antmendoza.temporal.humantask.basicimplementation.workflow;
 
+import com.antmendoza.temporal.humantask.TaskInput;
+import com.antmendoza.temporal.humantask.WorkflowInput;
+import com.antmendoza.temporal.humantask.activities.Activities;
+import com.antmendoza.temporal.humantask.activities.UserTasks;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.activity.LocalActivityOptions;
 import io.temporal.workflow.Workflow;
