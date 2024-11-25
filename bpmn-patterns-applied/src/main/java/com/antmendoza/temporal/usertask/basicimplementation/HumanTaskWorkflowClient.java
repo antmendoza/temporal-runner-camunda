@@ -1,9 +1,9 @@
-package com.antmendoza.temporal.humantask.basicimplementation;
+package com.antmendoza.temporal.usertask.basicimplementation;
 
 
-import com.antmendoza.temporal.humantask.TaskInput;
-import com.antmendoza.temporal.humantask.WorkflowInput;
-import com.antmendoza.temporal.humantask.basicimplementation.workflow.HumanTaskWorkflow;
+import com.antmendoza.temporal.usertask.TaskInput;
+import com.antmendoza.temporal.usertask.WorkflowInput;
+import com.antmendoza.temporal.usertask.basicimplementation.workflow.HumanTaskWorkflow;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
@@ -41,7 +41,7 @@ public class HumanTaskWorkflowClient {
         // The workflow is ready to receive the task input
         while (!taskCreated) {
 
-            // in real world application we query an exteran system to list tasks
+            // in real world application we query an external system to list tasks
             taskCreated = workflow.taskCreated();
             try {
                 Thread.sleep(500);

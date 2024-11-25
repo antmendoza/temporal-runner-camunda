@@ -1,16 +1,16 @@
-package com.antmendoza.temporal.humantask.advancedimplementation.workflow;
+package com.antmendoza.temporal.usertask.basicimplementation.workflow;
 
-import com.antmendoza.temporal.humantask.TaskInput;
-import com.antmendoza.temporal.humantask.WorkflowInput;
-import com.antmendoza.temporal.humantask.activities.Activities;
-import com.antmendoza.temporal.humantask.activities.UserTasks;
+import com.antmendoza.temporal.usertask.TaskInput;
+import com.antmendoza.temporal.usertask.WorkflowInput;
+import com.antmendoza.temporal.usertask.activities.Activities;
+import com.antmendoza.temporal.usertask.activities.UserTasks;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.activity.LocalActivityOptions;
 import io.temporal.workflow.Workflow;
 
 import java.time.Duration;
 
-public class AdvHumanTaskWorkflowImpl implements AdvHumanTaskWorkflow {
+public class HumanTaskWorkflowImpl implements HumanTaskWorkflow {
 
 
     private final Activities activities =

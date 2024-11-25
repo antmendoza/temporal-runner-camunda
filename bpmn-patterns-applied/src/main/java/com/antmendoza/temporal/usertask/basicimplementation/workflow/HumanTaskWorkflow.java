@@ -1,14 +1,14 @@
-package com.antmendoza.temporal.humantask.advancedimplementation.workflow;
+package com.antmendoza.temporal.usertask.basicimplementation.workflow;
 
-import com.antmendoza.temporal.humantask.TaskInput;
-import com.antmendoza.temporal.humantask.WorkflowInput;
+import com.antmendoza.temporal.usertask.TaskInput;
+import com.antmendoza.temporal.usertask.WorkflowInput;
 import io.temporal.workflow.QueryMethod;
 import io.temporal.workflow.SignalMethod;
 import io.temporal.workflow.WorkflowInterface;
 import io.temporal.workflow.WorkflowMethod;
 
 @WorkflowInterface
-public interface AdvHumanTaskWorkflow {
+public interface HumanTaskWorkflow {
 
 
     @WorkflowMethod
@@ -16,7 +16,8 @@ public interface AdvHumanTaskWorkflow {
 
 
     @SignalMethod
-    void taskInput(TaskInput taskInput);
+    void taskInput(
+            TaskInput taskInput);
 
 
     @QueryMethod

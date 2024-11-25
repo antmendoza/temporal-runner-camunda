@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.humantask.activities;
+package com.antmendoza.temporal.usertask.activities;
 
 import com.thedeanda.lorem.LoremIpsum;
 import org.slf4j.Logger;

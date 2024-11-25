@@ -1,15 +1,15 @@
-package com.antmendoza.temporal.humantask.basicimplementation;
+package com.antmendoza.temporal.usertask.basicimplementation;
 
 
-import com.antmendoza.temporal.humantask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.humantask.activities.UserTasksImpl;
-import com.antmendoza.temporal.humantask.basicimplementation.workflow.HumanTaskWorkflowImpl;
+import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
+import com.antmendoza.temporal.usertask.activities.UserTasksImpl;
+import com.antmendoza.temporal.usertask.basicimplementation.workflow.HumanTaskWorkflowImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 
-import static com.antmendoza.temporal.humantask.basicimplementation.HumanTaskWorkflowClient.TASK_QUEUE;
+import static com.antmendoza.temporal.usertask.basicimplementation.HumanTaskWorkflowClient.TASK_QUEUE;
 
 public class HumanTaskWorkflowWorker {
 

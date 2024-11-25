@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.humantask;
+package com.antmendoza.temporal.usertask;
 
 public record TaskInput (boolean approved) {
 }

@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.humantask.activities;
+package com.antmendoza.temporal.usertask.activities;
 
 public class UserTasksImpl implements UserTasks {
     @Override

@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.humantask.activities;
+package com.antmendoza.temporal.usertask.activities;
 
 import io.temporal.activity.ActivityInterface;
 import io.temporal.activity.ActivityMethod;
