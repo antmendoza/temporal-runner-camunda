@@ -19,6 +19,7 @@
 
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.CompletablePromise;
 import io.temporal.workflow.Workflow;

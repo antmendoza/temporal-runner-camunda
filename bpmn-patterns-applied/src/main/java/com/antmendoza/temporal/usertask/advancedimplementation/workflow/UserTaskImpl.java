@@ -19,6 +19,9 @@
 
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TasksList;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManager;
 import io.temporal.activity.Activity;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;

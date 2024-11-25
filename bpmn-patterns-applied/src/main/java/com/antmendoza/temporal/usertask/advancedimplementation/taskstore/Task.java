@@ -1,5 +1,7 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
+package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
 
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskState;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;

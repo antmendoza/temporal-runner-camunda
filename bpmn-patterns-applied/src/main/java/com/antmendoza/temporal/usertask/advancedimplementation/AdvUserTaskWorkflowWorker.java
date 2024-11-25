@@ -1,17 +1,19 @@
-package com.antmendoza.temporal.usertask.basicimplementation;
+package com.antmendoza.temporal.usertask.advancedimplementation;
 
 
 import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.usertask.activities.UserTasksImpl;
-import com.antmendoza.temporal.usertask.basicimplementation.workflow.HumanTaskWorkflowImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.UserTaskImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManagerImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowWithTasksImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 
-import static com.antmendoza.temporal.usertask.basicimplementation.HumanTaskWorkflowClient.TASK_QUEUE;
+import static com.antmendoza.temporal.usertask.advancedimplementation.AdvUserTaskWorkflowClient.TASK_QUEUE;
 
-public class HumanTaskWorkflowWorker {
+
+public class AdvUserTaskWorkflowWorker {
 
 
     public static void main(String[] args) {
@@ -30,14 +32,15 @@ public class HumanTaskWorkflowWorker {
          * Workflow implementations must be known to the worker at runtime in
          * order to dispatch workflow tasks.
          */
-        worker.registerWorkflowImplementationTypes(HumanTaskWorkflowImpl.class);
+        worker.registerWorkflowImplementationTypes(WorkflowWithTasksImpl.class);
+        worker.registerWorkflowImplementationTypes(WorkflowTaskManagerImpl.class);
 
         /*
          * Register our Activity Types with the Worker. Since Activities are stateless and thread-safe,
          * the Activity Type is a shared instance.
          */
         worker.registerActivitiesImplementations(new ActivitiesImpl());
-        worker.registerActivitiesImplementations(new UserTasksImpl());
+        worker.registerActivitiesImplementations(new UserTaskImpl(client));
 
 
         factory.start();

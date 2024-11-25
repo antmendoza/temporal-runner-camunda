@@ -25,8 +25,6 @@ import io.temporal.workflow.WorkflowMethod;
 @WorkflowInterface
 public interface WorkflowWithTasks {
 
-  String WORKFLOW_ID = WorkflowWithTasks.class.getSimpleName();
-
   @WorkflowMethod
   String execute();
 }

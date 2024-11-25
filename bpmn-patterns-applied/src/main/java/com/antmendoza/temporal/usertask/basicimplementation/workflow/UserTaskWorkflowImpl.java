@@ -10,7 +10,7 @@ import io.temporal.workflow.Workflow;
 
 import java.time.Duration;
 
-public class HumanTaskWorkflowImpl implements HumanTaskWorkflow {
+public class UserTaskWorkflowImpl implements UserTaskWorkflow {
 
 
     private final Activities activities =

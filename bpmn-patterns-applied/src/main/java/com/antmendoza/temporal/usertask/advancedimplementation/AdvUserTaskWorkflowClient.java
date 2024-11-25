@@ -1,18 +1,21 @@
 package com.antmendoza.temporal.usertask.advancedimplementation;
 
 
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManager;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class AdvHumanTaskWorkflowClient2 {
+public class AdvUserTaskWorkflowClient {
 
-    static final String TASK_QUEUE = "AdvHumanTaskWorkflowClient_TaskQueue";
+    static final String TASK_QUEUE = "AdvUserTaskWorkflowClient_TaskQueue";
 
-    static final String WORKFLOW_ID = "AdvHumanTaskWorkflowClient_Workflow";
+    static final String WORKFLOW_ID = "AdvUserTaskWorkflowClient_Workflow";
 
 
     public static void main(String[] args) {
@@ -21,6 +24,8 @@ public class AdvHumanTaskWorkflowClient2 {
 
         WorkflowClient client = WorkflowClient.newInstance(service);
 
+
+        startWorkflowWithUserTasks(client);
 
 
         boolean taskCreated = false;
@@ -36,35 +41,40 @@ public class AdvHumanTaskWorkflowClient2 {
             }
 
             // wait until one task in WorkflowTaskManager is created
-            final List<Task> allTasks = getWorkflowTaskManager(client)
-                    .getAllTasks();
 
 
-            System.out.println("All tasks: " + allTasks);
-
-            taskCreated = !allTasks.isEmpty();
-
-
+            taskCreated = !getAllTasks(client).isEmpty();
         }
 
 
+        Task tasks = getAllTasks(client).get(0);
 
+
+        //Completing tasks
+
+
+        client.newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID).changeTaskStateTo(new ChangeTaskRequest(
+                tasks.getId(), "user1", TaskState.Completed, "approved"
+        ));
+
+        final String result = client.newUntypedWorkflowStub(WORKFLOW_ID).getResult(String.class);
+
+        System.out.println(result);
         System.exit(0);
     }
 
-    private static WorkflowTaskManager getWorkflowTaskManager(final WorkflowClient client) {
-        // Create the workflow client stub. It is used to start our workflow execution.
-        WorkflowTaskManager workflowTaskManager =
-                client.newWorkflowStub(
-                        WorkflowTaskManager.class,
-                        WorkflowOptions.newBuilder()
-                                .setWorkflowId(WorkflowTaskManager.WORKFLOW_ID)
-                                .setTaskQueue(TASK_QUEUE)
-                                .build());
+    private static List<Task> getAllTasks(final WorkflowClient client) {
 
+        try{
 
-        return client.newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID);
-
+        final List<Task> allTasks = client.newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID)
+                .getAllTasks();
+        return allTasks;
+        }catch (Exception e) {
+            System.out.println("Start the worker ... " + e);
+            //workflow not started, start the worker
+            return new ArrayList<>();
+        }
 
     }
 

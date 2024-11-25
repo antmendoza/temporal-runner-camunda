@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
+package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
 
 import java.util.StringTokenizer;
 
@@ -31,12 +31,4 @@ public class TaskToken {
     }
 
 
-    public static void main(String[] args) {
-
-        String workflowId = "AdvHumanTaskWorkflowClient_Workflow-@-1";
-
-
-        System.out.println(new TaskToken(workflowId).getWorkflowId());
-
-    }
 }

@@ -20,6 +20,8 @@
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
 import com.antmendoza.temporal.usertask.activities.Activities;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TaskToken;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 import org.slf4j.Logger;
@@ -50,7 +52,6 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
 
         //Block until the tasks is completed
         final String taskResult = taskService.userTask(task);
-        System.out.println("tasks" + task);
         boolean isValid = taskResult.equals("approved");
 
         if (isValid) {

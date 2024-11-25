@@ -3,16 +3,16 @@ package com.antmendoza.temporal.usertask.basicimplementation;
 
 import com.antmendoza.temporal.usertask.TaskInput;
 import com.antmendoza.temporal.usertask.WorkflowInput;
-import com.antmendoza.temporal.usertask.basicimplementation.workflow.HumanTaskWorkflow;
+import com.antmendoza.temporal.usertask.basicimplementation.workflow.UserTaskWorkflow;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 
-public class HumanTaskWorkflowClient {
+public class UserTaskWorkflowClient {
 
-    static final String TASK_QUEUE = "HumanTask_TaskQueue";
+    static final String TASK_QUEUE = "UserTask_TaskQueue";
 
-    static final String WORKFLOW_ID = "HumanTask_Workflow";
+    static final String WORKFLOW_ID = "UserTask_Workflow";
 
 
     public static void main(String[] args) {
@@ -23,9 +23,9 @@ public class HumanTaskWorkflowClient {
 
 
         // Create the workflow client stub. It is used to start our workflow execution.
-        HumanTaskWorkflow workflow =
+        UserTaskWorkflow workflow =
                 client.newWorkflowStub(
-                        HumanTaskWorkflow.class,
+                        UserTaskWorkflow.class,
                         WorkflowOptions.newBuilder()
                                 .setWorkflowId(WORKFLOW_ID)
                                 .setTaskQueue(TASK_QUEUE)
@@ -52,7 +52,7 @@ public class HumanTaskWorkflowClient {
 
 
         final boolean approved = true;
-        final HumanTaskWorkflow humanTaskWorkflow = client.newWorkflowStub(HumanTaskWorkflow.class, WORKFLOW_ID);
+        final UserTaskWorkflow humanTaskWorkflow = client.newWorkflowStub(UserTaskWorkflow.class, WORKFLOW_ID);
         humanTaskWorkflow.taskInput(new TaskInput(approved));
 
 

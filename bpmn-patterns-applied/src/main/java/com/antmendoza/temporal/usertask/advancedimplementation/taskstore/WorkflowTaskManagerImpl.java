@@ -1,5 +1,6 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
+package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
 
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.*;
 import io.temporal.failure.ApplicationFailure;
 import io.temporal.workflow.Workflow;
 import org.slf4j.Logger;
@@ -12,14 +13,14 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
     private final TasksList taskListService = new TasksList();
 
-    private static void completeTasks(final Task task) {
+    private void completeTasks(final Task task) {
         try {
 
             final String taskId = task.getId();
             final String externalWorkflowId = new TaskToken(taskId).getWorkflowId();
 
-            System.out.println("taskId" + taskId);
-            System.out.println("externalWorkflowId" + externalWorkflowId);
+            logger.debug("taskId: " + taskId);
+            logger.debug("externalWorkflowId: " + externalWorkflowId);
             Workflow.newExternalWorkflowStub(TaskClient.class, externalWorkflowId).completeTaskByToken(
                     taskId, task.getResult()
             );
@@ -34,7 +35,6 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
         this.taskListService.addAll(taskList);
 
-        System.out.println(" run taskListService" + taskListService);
 
         while (true) {
 
@@ -45,9 +45,11 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
             final Task task = this.taskListService.getNextUnprocessedTasks();
             logger.info("Processing task " + task);
+
+
+
             Task previousTask = task.getPreviousState();
             logger.info("Processing previousTask " + previousTask);
-
             // notify the user...
             if (previousTask != null
                     && !Objects.equals(task.getAssignedTo(), previousTask.getAssignedTo())) {
@@ -71,7 +73,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
         this.taskListService.add(task);
 
-        System.out.println(" addTask taskListService" + taskListService);
+
     }
 
     @Override

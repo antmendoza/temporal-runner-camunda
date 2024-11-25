@@ -1,20 +1,17 @@
-package com.antmendoza.temporal.usertask.advancedimplementation;
+package com.antmendoza.temporal.usertask.basicimplementation;
 
 
 import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.UserTaskImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowTaskManager;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowTaskManagerImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowWithTasksImpl;
+import com.antmendoza.temporal.usertask.activities.UserTasksImpl;
+import com.antmendoza.temporal.usertask.basicimplementation.workflow.UserTaskWorkflowImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 
-import static com.antmendoza.temporal.usertask.advancedimplementation.AdvHumanTaskWorkflowClient.TASK_QUEUE;
+import static com.antmendoza.temporal.usertask.basicimplementation.UserTaskWorkflowClient.TASK_QUEUE;
 
-
-public class AdvHumanTaskWorkflowWorker {
+public class UserTaskWorkflowWorker {
 
 
     public static void main(String[] args) {
@@ -33,15 +30,14 @@ public class AdvHumanTaskWorkflowWorker {
          * Workflow implementations must be known to the worker at runtime in
          * order to dispatch workflow tasks.
          */
-        worker.registerWorkflowImplementationTypes(WorkflowWithTasksImpl.class);
-        worker.registerWorkflowImplementationTypes(WorkflowTaskManagerImpl.class);
+        worker.registerWorkflowImplementationTypes(UserTaskWorkflowImpl.class);
 
         /*
          * Register our Activity Types with the Worker. Since Activities are stateless and thread-safe,
          * the Activity Type is a shared instance.
          */
         worker.registerActivitiesImplementations(new ActivitiesImpl());
-        worker.registerActivitiesImplementations(new UserTaskImpl(client));
+        worker.registerActivitiesImplementations(new UserTasksImpl());
 
 
         factory.start();
