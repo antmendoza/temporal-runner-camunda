@@ -32,7 +32,7 @@ import java.util.Map;
  * This class responsibility is to register the task in the external system and waits for the
  * external system to signal back.
  */
-public class TaskService<R> {
+public class TaskService {
 
   private final UserTask userTask =
       Workflow.newActivityStub(
@@ -49,14 +49,14 @@ public class TaskService<R> {
     Workflow.registerListener(
         new TaskClient() {
           @Override
-          public void completeTaskByToken(final String taskToken) {
+          public void completeTaskByToken(final String taskToken, final String result) {
             logger.info("Completing task with token: " + taskToken);
-            tasksManager.completeTask(taskToken);
+            tasksManager.completeTask(taskToken, result);
           }
         });
   }
 
-  public Task userTask(Task task) {
+  public String userTask(Task task) {
 
     logger.info("Before creating task : " + task);
 
@@ -66,27 +66,29 @@ public class TaskService<R> {
 
     logger.info("Task created: " + task);
 
-    tasksManager.waitForTaskCompletion(task);
+    String result = tasksManager.waitForTaskCompletion(task);
 
-    logger.info("Task completed: " + task);
-    return task;
+    logger.info("Task completed: " + task + " result: " + result);
+
+    return result;
   }
 
   private class TaskManager {
 
-    private final Map<String, CompletablePromise<R>> tasks = new HashMap<>();
+    private final Map<String, CompletablePromise<String>> tasks = new HashMap<>();
 
-    public void waitForTaskCompletion(final Task task) {
-      final CompletablePromise<R> promise = Workflow.newPromise();
+    public String waitForTaskCompletion(final Task task) {
+      final CompletablePromise<String> promise = Workflow.newPromise();
       tasks.put(task.getId(), promise);
       // Wait promise to complete
-      promise.get();
+      String result = promise.get();
+      return result;
     }
 
-    public void completeTask(final String taskToken) {
+    public void completeTask(final String taskToken, String result) {
 
-      final CompletablePromise<R> completablePromise = tasks.get(taskToken);
-      completablePromise.complete(null);
+      final CompletablePromise<String> completablePromise = tasks.get(taskToken);
+      completablePromise.complete(result);
     }
   }
 }

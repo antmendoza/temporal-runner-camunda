@@ -9,9 +9,10 @@ public class TasksList {
 
   private final List<Task> tasks = new ArrayList<>();
 
+  //Task whin changes that has not been processed by the workflow yet.
   private final List<Task> unprocessedAddedTasks = new ArrayList<>();
 
-  public TasksList(final TasksList taskList) {
+  public void addAll(final TasksList taskList) {
     this.unprocessedAddedTasks.addAll(taskList != null ? taskList.unprocessedAddedTasks : new ArrayList<>());
     this.tasks.addAll(taskList != null ? taskList.tasks : new ArrayList<>());
   }
@@ -56,7 +57,8 @@ public class TasksList {
         break;
         // TODO implement validation for other transitions
       default:
-        throw new RuntimeException(taskState + " to " + newState + " not implemented");
+        canTransitionate = true;
+        //throw new RuntimeException(taskState + " to " + newState + " not implemented");
     }
 
     return canTransitionate;
@@ -101,5 +103,14 @@ public class TasksList {
 
   public List<Task> getTasks() {
     return tasks;
+  }
+
+
+  @Override
+  public String toString() {
+    return "TasksList{" +
+            "tasks=" + tasks +
+            ", unprocessedAddedTasks=" + unprocessedAddedTasks +
+            '}';
   }
 }

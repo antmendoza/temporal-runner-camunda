@@ -26,5 +26,5 @@ import io.temporal.workflow.WorkflowInterface;
 public interface TaskClient {
 
   @SignalMethod
-  void completeTaskByToken(String taskToken);
+  void completeTaskByToken(final String taskToken, final String result);
 }

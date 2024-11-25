@@ -31,9 +31,9 @@ import java.time.Duration;
  */
 public class WorkflowWithTasksImpl implements WorkflowWithTasks {
 
-    final TaskToken taskToken = new TaskToken();
+    final GenerateTaskToken taskToken = new GenerateTaskToken();
     private final Logger logger = Workflow.getLogger(WorkflowWithTasksImpl.class);
-    private final TaskService<Void> taskService = new TaskService<>();
+    private final TaskService taskService = new TaskService();
     private final Activities activities =
             Workflow.newActivityStub(
                     Activities.class,
@@ -49,8 +49,9 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
         final Task task = new Task(taskToken.getNext(), "TODO 1");
 
         //Block until the tasks is completed
-        boolean isValid = taskService.userTask(task).getTaskResponse().equals("approved");
-
+        final String taskResult = taskService.userTask(task);
+        System.out.println("tasks" + task);
+        boolean isValid = taskResult.equals("approved");
 
         if (isValid) {
             activities.activity2("other input 2");
@@ -62,12 +63,14 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
         return "done";
     }
 
-    private static class TaskToken {
+    private static class GenerateTaskToken {
         private int taskToken = 1;
 
         public String getNext() {
-
-            return Workflow.getInfo().getWorkflowId() + "_" + taskToken++;
+            final String workflowId = Workflow.getInfo().getWorkflowId();
+            return new TaskToken(workflowId,
+                    "" + taskToken++).getToken();
         }
     }
+
 }

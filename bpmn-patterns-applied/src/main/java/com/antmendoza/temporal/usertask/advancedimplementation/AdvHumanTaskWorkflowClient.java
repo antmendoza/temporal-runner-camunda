@@ -1,7 +1,6 @@
 package com.antmendoza.temporal.usertask.advancedimplementation;
 
 
-import com.antmendoza.temporal.usertask.TaskInput;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -46,13 +45,10 @@ public class AdvHumanTaskWorkflowClient {
                 .getAllTasks().get(0);
 
 
-
         //Completing tasks
         getWorkflowTaskManager(client).changeTaskStateTo(new ChangeTaskRequest(
-                tasks.getId(), "user1", "user1", TaskState.Completed
+                tasks.getId(), "user1", TaskState.Completed, "approved"
         ));
-
-
 
         final String result = client.newUntypedWorkflowStub(WORKFLOW_ID).getResult(String.class);
 
