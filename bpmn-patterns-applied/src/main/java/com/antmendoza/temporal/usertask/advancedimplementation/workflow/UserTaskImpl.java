@@ -47,11 +47,7 @@ public class UserTaskImpl implements UserTask {
             .setTaskQueue(taskQueue)
             .build();
 
-    final WorkflowTaskManager taskManager =
-        workflowClient.newWorkflowStub(WorkflowTaskManager.class, workflowOptions);
 
-
-    //
     final Object[] workflowInput = {new TasksList()};
     final Object[] signalInput = {task};
     final String signalName = "addTask";

@@ -67,7 +67,7 @@ public class TaskService {
 
     logger.info("Task created: " + task);
 
-    String result = tasksManager.waitForTaskCompletion(task);
+    String result = tasksManager.waitForTaskCompletion(task).getResult();
 
     logger.info("Task completed: " + task + " result: " + result);
 
@@ -78,12 +78,15 @@ public class TaskService {
 
     private final Map<String, CompletablePromise<String>> tasks = new HashMap<>();
 
-    public String waitForTaskCompletion(final Task task) {
+    public Task waitForTaskCompletion(final Task task) {
       final CompletablePromise<String> promise = Workflow.newPromise();
       tasks.put(task.getId(), promise);
       // Wait promise to complete
       String result = promise.get();
-      return result;
+
+
+      return task.withResult(result);
+
     }
 
     public void completeTask(final String taskToken, String result) {

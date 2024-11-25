@@ -52,8 +52,8 @@ public class UserTaskWorkflowClient {
 
 
         final boolean approved = true;
-        final UserTaskWorkflow humanTaskWorkflow = client.newWorkflowStub(UserTaskWorkflow.class, WORKFLOW_ID);
-        humanTaskWorkflow.taskInput(new TaskInput(approved));
+        final UserTaskWorkflow userTaskWorkflow = client.newWorkflowStub(UserTaskWorkflow.class, WORKFLOW_ID);
+        userTaskWorkflow.taskInput(new TaskInput(approved));
 
 
         final String result = client.newUntypedWorkflowStub(WORKFLOW_ID).getResult(String.class);

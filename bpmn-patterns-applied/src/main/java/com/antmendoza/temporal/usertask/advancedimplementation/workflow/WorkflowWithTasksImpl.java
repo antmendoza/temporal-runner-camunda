@@ -48,7 +48,7 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
         activities.activity1("some input");
 
 
-        final Task task = new Task(taskToken.getNext(), "TODO 1");
+        final Task task = new Task(taskToken.getNext(), "user1", "TODO 1");
 
         //Block until the tasks is completed
         final String taskResult = taskService.userTask(task);

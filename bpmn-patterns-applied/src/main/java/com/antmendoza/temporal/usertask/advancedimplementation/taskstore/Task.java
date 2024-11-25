@@ -2,6 +2,8 @@ package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
 
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.SerializationUtils;
 
 import java.io.Serializable;
@@ -19,8 +21,9 @@ public class Task implements Serializable {
     public Task() {
     }
 
-    public Task(String id, String title) {
+    public Task(String id, String assignedTo, String title) {
         this.id = id;
+        this.assignedTo = assignedTo;
         this.title = title;
         this.taskState = TaskState.New;
     }
@@ -49,6 +52,13 @@ public class Task implements Serializable {
         return result;
     }
 
+    @JsonIgnore
+    public Task withResult(final String result) {
+        final Task newTask = SerializationUtils.clone(this);
+        newTask.result = result;
+        return newTask;
+    }
+
     // Mutate task state with the requested changes
     public void changeTaskState(final ChangeTaskRequest changeTaskRequest) {
         this.previousState = SerializationUtils.clone(this);
@@ -56,6 +66,7 @@ public class Task implements Serializable {
         this.assignedTo = changeTaskRequest.assignedTo();
         this.result = changeTaskRequest.result();
     }
+
 
 
     @Override
@@ -82,4 +93,6 @@ public class Task implements Serializable {
                 ", result='" + result + '\'' +
                 '}';
     }
+
+
 }

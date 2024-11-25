@@ -1,7 +1,7 @@
-# BPMN HumanTask
+# BPMN UserTask
 
 - WIP
 
 
-![HumanTask_workflow.png](../../../../../../../../docs/humantask.png)
+![UserTask.png](../../../../../../../../docs/usertask.png)
 
