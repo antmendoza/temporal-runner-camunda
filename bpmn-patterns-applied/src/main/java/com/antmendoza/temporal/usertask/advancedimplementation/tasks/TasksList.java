@@ -1,7 +1,6 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
+package com.antmendoza.temporal.usertask.advancedimplementation.tasks;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskState;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.CompleteTaskRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,38 +33,18 @@ public class TasksList {
   }
 
   @JsonIgnore
-  public boolean canTaskTransitionToState(final ChangeTaskRequest changeTaskRequest) {
-    final TaskState taskState = getTask(changeTaskRequest.taskId()).getTaskState();
-
-    boolean canTransitionate = false;
-    final TaskState newState = changeTaskRequest.newState();
-    switch (newState) {
-      case Completed:
-        if (taskState.equals(TaskState.Open)) {
-          canTransitionate = true;
-        }
-        break;
-
-        // TODO implement validation for other transitions
-      default:
-          throw new RuntimeException(taskState + " to " + newState + " not implemented");
-    }
-
-    return canTransitionate;
-  }
-
-  @JsonIgnore
   public Task getTask(final String taskId) {
     return this.allTasks.stream().filter(t -> t.getId().equals(taskId)).findFirst().get();
   }
 
   @JsonIgnore
-  public void changeTaskStateTo(final ChangeTaskRequest changeTaskRequest) {
+  public void completeTask(final CompleteTaskRequest changeTaskRequest) {
 
     final String taskId = changeTaskRequest.taskId();
     final Task task = getTask(taskId);
     final TaskState taskState = task.getTaskState();
-    if (!canTaskTransitionToState(changeTaskRequest)) {
+    final TaskState completed = TaskState.Completed;
+    if (!task.canTaskTransitionToState(completed)) {
       throw new RuntimeException(
           "Task with id ["
               + taskId
@@ -73,12 +52,30 @@ public class TasksList {
               + "with state ["
               + taskState
               + "], can not transition to "
-              + changeTaskRequest.newState());
+              + completed);
     }
 
-    // For the sake of simplicity Task is mutable
-    task.changeTaskState(changeTaskRequest);
-    this.unprocessedAddedTasks.add(task);
+    this.allTasks.remove(task);
+    add(task.withResult(changeTaskRequest.result()).withState(completed));
+  }
+
+  @JsonIgnore
+  public void timeoutTask(final Task task) {
+
+    final TaskState timeOut = TaskState.TimeOut;
+    if (!task.canTaskTransitionToState(timeOut)) {
+      throw new RuntimeException(
+          "Task with id ["
+              + task.getId()
+              + "], "
+              + "with state ["
+              + task.getTaskState()
+              + "], can not transition to "
+              + timeOut);
+    }
+
+    this.allTasks.remove(task);
+    add(task.withState(timeOut));
   }
 
   @JsonIgnore
@@ -87,14 +84,13 @@ public class TasksList {
   }
 
   @JsonIgnore
-  public Task getNextUnprocessedTasks() {
+  public Task getNextUnprocessedTask() {
     return unprocessedAddedTasks.remove(unprocessedAddedTasks.size() - 1);
   }
 
   public List<Task> getAllTasks() {
     return allTasks;
   }
-
 
   @JsonIgnore
   public List<Task> getTasks(final Predicate<Task> taskPredicate) {
@@ -110,5 +106,4 @@ public class TasksList {
         + unprocessedAddedTasks
         + '}';
   }
-
 }

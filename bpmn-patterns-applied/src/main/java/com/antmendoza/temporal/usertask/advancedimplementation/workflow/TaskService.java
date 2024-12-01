@@ -19,7 +19,8 @@
 
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.TaskTimeoutException;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.CompletablePromise;
 import io.temporal.workflow.Workflow;
@@ -34,9 +35,10 @@ import org.slf4j.Logger;
  */
 public class TaskService {
 
-  private final UserTask userTask =
+  // Can be local activity
+  private final ActivityUserTask userTask =
       Workflow.newActivityStub(
-          UserTask.class,
+          ActivityUserTask.class,
           ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(5)).build());
 
   private TaskManager tasksManager = new TaskManager();
@@ -53,22 +55,28 @@ public class TaskService {
             logger.info("Completing task with token: " + taskToken);
             tasksManager.completeTask(taskToken, result);
           }
+
+          @Override
+          public void timeOutTaskByToken(final String taskToken) {
+            logger.info("timed out task with token: " + taskToken);
+            tasksManager.timeoutTask(taskToken);
+          }
         });
   }
 
   public String userTask(Task task) {
 
-    logger.info("Before creating task : " + task);
+    logger.info("Before creating task : {}", task);
 
     // Activity implementation is responsible for registering the task to the external service
     // (which is responsible for managing the task life-cycle)
     userTask.createTask(task);
 
-    logger.info("Task created: " + task);
+    logger.info("Task created: {}", task);
 
     String result = tasksManager.waitForTaskCompletion(task).getResult();
 
-    logger.info("Task completed: " + task + " result: " + result);
+    logger.info("Task completed: {} result: {}", task, result);
 
     return result;
   }
@@ -90,6 +98,11 @@ public class TaskService {
 
       final CompletablePromise<String> completablePromise = tasks.get(taskToken);
       completablePromise.complete(result);
+    }
+
+    public void timeoutTask(final String taskToken) {
+      final CompletablePromise<String> completablePromise = tasks.get(taskToken);
+      completablePromise.completeExceptionally(new TaskTimeoutException("something went wrong"));
     }
   }
 }

@@ -13,11 +13,7 @@ public class WorkflowTest {
 
   @Rule
   public TestWorkflowRule testWorkflowRule =
-      TestWorkflowRule.newBuilder()
-          .setDoNotStart(true)
-          .setUseExternalService(true)
-          .setNamespace("default")
-          .build();
+      TestWorkflowRule.newBuilder().setDoNotStart(true).build();
 
   @Test
   public void simpleActivity() {

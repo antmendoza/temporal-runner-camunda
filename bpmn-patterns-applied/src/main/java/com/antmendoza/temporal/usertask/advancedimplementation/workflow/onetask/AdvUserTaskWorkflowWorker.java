@@ -1,11 +1,10 @@
-package com.antmendoza.temporal.usertask.advancedimplementation;
+package com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetask;
 
-import static com.antmendoza.temporal.usertask.advancedimplementation.AdvUserTaskWorkflowClient.TASK_QUEUE;
+import static com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetask.AdvUserTaskWorkflowClient.TASK_QUEUE;
 
 import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManagerImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.UserTaskImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowWithTasksImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.WorkflowTaskManagerImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ActivityUserTaskImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
@@ -36,7 +35,7 @@ public class AdvUserTaskWorkflowWorker {
      * the Activity Type is a shared instance.
      */
     worker.registerActivitiesImplementations(new ActivitiesImpl());
-    worker.registerActivitiesImplementations(new UserTaskImpl(client));
+    worker.registerActivitiesImplementations(new ActivityUserTaskImpl(client));
 
     factory.start();
   }

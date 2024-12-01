@@ -1,7 +1,9 @@
 # BPMN UserTask
 
-- WIP
+
+![usertask_with_timer.png](../../../../../../../../docs/usertask_with_timer.png)
 
 
-![UserTask.png](../../../../../../../../docs/usertask.png)
-
+# TODO
+- [ ] continue as new
+- [ ] delete 

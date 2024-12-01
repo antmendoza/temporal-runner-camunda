@@ -19,18 +19,18 @@
 
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TasksList;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManager;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.TasksList;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.WorkflowTaskManager;
 import io.temporal.activity.Activity;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
 
-public class UserTaskImpl implements UserTask {
+public class ActivityUserTaskImpl implements ActivityUserTask {
 
   private final WorkflowClient workflowClient;
 
-  public UserTaskImpl(WorkflowClient workflowClient) {
+  public ActivityUserTaskImpl(WorkflowClient workflowClient) {
     this.workflowClient = workflowClient;
   }
 

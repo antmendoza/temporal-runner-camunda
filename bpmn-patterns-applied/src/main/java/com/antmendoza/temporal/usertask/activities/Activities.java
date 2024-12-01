@@ -14,4 +14,7 @@ public interface Activities {
 
   @ActivityMethod
   String activity3(String input);
+
+  @ActivityMethod
+  String activity4(String input);
 }

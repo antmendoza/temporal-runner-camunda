@@ -1,6 +1,6 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
+package com.antmendoza.temporal.usertask.advancedimplementation.tasks;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.CompleteTaskRequest;
 import io.temporal.workflow.*;
 import java.util.List;
 
@@ -15,11 +15,11 @@ public interface WorkflowTaskManager {
   @SignalMethod
   void addTask(Task task);
 
-  @UpdateValidatorMethod(updateName = "changeTaskStateTo")
-  void validateChangeTaskStateTo(ChangeTaskRequest changeTaskRequest);
+  @UpdateValidatorMethod(updateName = "completeTask")
+  void validateCompleteTask(CompleteTaskRequest changeTaskRequest);
 
   @UpdateMethod
-  void changeTaskStateTo(ChangeTaskRequest changeTaskRequest);
+  void completeTask(CompleteTaskRequest changeTaskRequest);
 
   @QueryMethod
   List<Task> getPendingTasks(final TaskFilter taskPredicate);

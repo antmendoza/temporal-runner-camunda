@@ -19,11 +19,11 @@
 
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
 import io.temporal.activity.ActivityInterface;
 
 @ActivityInterface
-public interface UserTask {
+public interface ActivityUserTask {
 
   void createTask(Task task);
 }

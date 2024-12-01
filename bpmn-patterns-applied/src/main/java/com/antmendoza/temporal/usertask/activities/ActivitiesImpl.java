@@ -22,4 +22,9 @@ public class ActivitiesImpl implements Activities {
   public String activity3(final String input) {
     return LoremIpsum.getInstance().getTitle(10);
   }
+
+  @Override
+  public String activity4(final String input) {
+    return LoremIpsum.getInstance().getTitle(10);
+  }
 }

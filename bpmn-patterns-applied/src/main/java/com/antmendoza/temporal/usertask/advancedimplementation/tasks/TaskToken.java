@@ -1,26 +1,26 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
+package com.antmendoza.temporal.usertask.advancedimplementation.tasks;
 
 import java.util.StringTokenizer;
 
 public class TaskToken {
-  private static final String s = "-@-";
+  private static final String s = "::@::";
   private final String workflowId;
-  private final String suffix;
+  private final String uniqueWorkflowToken;
 
-  public TaskToken(final String workflowId, final String suffix) {
+  public TaskToken(final String workflowId, final String uniqueWorkflowToken) {
     this.workflowId = workflowId;
-    this.suffix = suffix;
+    this.uniqueWorkflowToken = uniqueWorkflowToken;
   }
 
   public TaskToken(final String taskToken) {
     StringTokenizer st = new StringTokenizer(taskToken, s);
 
     this.workflowId = st.nextToken();
-    this.suffix = st.nextToken();
+    this.uniqueWorkflowToken = st.nextToken();
   }
 
   public String getToken() {
-    return workflowId + s + suffix;
+    return workflowId + s + uniqueWorkflowToken;
   }
 
   public String getWorkflowId() {

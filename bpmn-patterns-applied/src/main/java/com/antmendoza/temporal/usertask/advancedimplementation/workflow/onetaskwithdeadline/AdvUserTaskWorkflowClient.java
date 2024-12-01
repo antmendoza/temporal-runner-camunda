@@ -1,10 +1,8 @@
-package com.antmendoza.temporal.usertask.advancedimplementation;
+package com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetaskwithdeadline;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TaskFilter;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManager;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskState;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.TaskFilter;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.WorkflowTaskManager;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowWithTasks;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -18,7 +16,7 @@ public class AdvUserTaskWorkflowClient {
 
   static final String WORKFLOW_ID = "AdvUserTaskWorkflowClient_Workflow";
 
-  public static void main(String[] args) {
+  public static void main(String[] args) throws InterruptedException {
 
     WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
 
@@ -43,14 +41,16 @@ public class AdvUserTaskWorkflowClient {
       taskCreated = !getAllTasks(client).isEmpty();
     }
 
-    Task tasks = getAllTasks(client).get(0);
+    // Task deadline is 5s
+    Thread.sleep(5100);
 
-    // Completing tasks
-
-    client
-        .newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID)
-        .changeTaskStateTo(
-            new ChangeTaskRequest(tasks.getId(), "user1", TaskState.Completed, "approved"));
+    /*
+        Task tasks = getAllTasks(client).get(0);
+        // Completing tasks
+        client
+            .newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID)
+            .completeTask(new CompleteTaskRequest(tasks.getId(), "approved"));
+    */
 
     final String result = client.newUntypedWorkflowStub(WORKFLOW_ID).getResult(String.class);
 

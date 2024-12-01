@@ -17,11 +17,12 @@
  *  permissions and limitations under the License.
  */
 
-package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
+package com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetask;
 
 import com.antmendoza.temporal.usertask.activities.Activities;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TaskToken;
+import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskService;
+import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowWithTasks;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
 import java.time.Duration;
@@ -43,7 +44,8 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
 
     activities.activity1("some input");
 
-    final Task task = new Task(taskToken.getNext(), "user1", "TODO 1");
+    final Task task =
+        new Task.Builder().id(taskToken.getNext()).assignedTo("user1").title("TODO 1").build();
 
     // Block until the tasks is completed
     final String taskResult = taskService.userTask(task);
@@ -56,14 +58,5 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
     }
 
     return "done";
-  }
-
-  private static class GenerateTaskToken {
-    private int taskToken = 1;
-
-    public String getNext() {
-      final String workflowId = Workflow.getInfo().getWorkflowId();
-      return new TaskToken(workflowId, "" + taskToken++).getToken();
-    }
   }
 }

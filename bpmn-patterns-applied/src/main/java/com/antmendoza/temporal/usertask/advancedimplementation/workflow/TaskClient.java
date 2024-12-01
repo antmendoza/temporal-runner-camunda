@@ -27,4 +27,7 @@ public interface TaskClient {
 
   @SignalMethod
   void completeTaskByToken(final String taskToken, final String result);
+
+  @SignalMethod
+  void timeOutTaskByToken(final String taskToken);
 }

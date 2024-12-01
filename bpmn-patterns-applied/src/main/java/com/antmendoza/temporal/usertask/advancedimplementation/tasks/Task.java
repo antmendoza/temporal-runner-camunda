@@ -1,12 +1,10 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
+package com.antmendoza.temporal.usertask.advancedimplementation.tasks;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
-import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
+import java.time.Duration;
 import java.util.Objects;
 import org.apache.commons.lang3.SerializationUtils;
-
 
 public class Task implements Serializable {
   private String id;
@@ -16,23 +14,20 @@ public class Task implements Serializable {
 
   private Task previousState;
   private String result;
+  private Duration deadline;
 
-  public Task() {}
-
-  public Task(String id, String assignedTo, String title) {
-    this.id = id;
-    this.assignedTo = assignedTo;
-    this.title = title;
-    this.taskState = TaskState.Open;
+  public Task() {
+    taskState = TaskState.Open;
   }
 
   private Task(final Builder builder) {
     id = builder.id;
     title = builder.title;
     assignedTo = builder.assignedTo;
-    taskState = builder.taskState;
+    taskState = builder.taskState == null ? TaskState.Open : builder.taskState;
     previousState = builder.previousState;
     result = builder.result;
+    deadline = builder.deadline;
   }
 
   public String getTitle() {
@@ -59,20 +54,31 @@ public class Task implements Serializable {
     return result;
   }
 
+  public Duration getDeadline() {
+    return deadline;
+  }
+
   @JsonIgnore
   public Task withResult(final String result) {
-    final Task newTask = SerializationUtils.clone(this);
+    final Task newTask = cloneTaskAndStorePreviousState();
     newTask.result = result;
     return newTask;
   }
 
-  // Mutate task state with the requested changes
-  public void changeTaskState(final ChangeTaskRequest changeTaskRequest) {
-    this.previousState = SerializationUtils.clone(this);
-    this.taskState = changeTaskRequest.newState();
-    this.assignedTo = changeTaskRequest.assignedTo();
-    this.result = changeTaskRequest.result();
+
+  @JsonIgnore
+  public Task withState(final TaskState taskState) {
+    final Task newTask = cloneTaskAndStorePreviousState();
+    newTask.taskState = taskState;
+    return newTask;
   }
+
+  private Task cloneTaskAndStorePreviousState() {
+    final Task clone = SerializationUtils.clone(this);
+    clone.previousState = previousState;
+    return clone;
+  }
+
 
   @Override
   public boolean equals(final Object o) {
@@ -83,34 +89,39 @@ public class Task implements Serializable {
         && Objects.equals(assignedTo, task.assignedTo)
         && taskState == task.taskState
         && Objects.equals(previousState, task.previousState)
-        && Objects.equals(result, task.result);
+        && Objects.equals(result, task.result)
+        && Objects.equals(deadline, task.deadline);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, title, assignedTo, taskState, previousState, result);
+    return Objects.hash(id, title, assignedTo, taskState, previousState, result, deadline);
   }
 
-  @Override
-  public String toString() {
-    return "Task{"
-        + "id='"
-        + id
-        + '\''
-        + ", title='"
-        + title
-        + '\''
-        + ", assignedTo='"
-        + assignedTo
-        + '\''
-        + ", taskState="
-        + taskState
-        + ", previousState="
-        + previousState
-        + ", result='"
-        + result
-        + '\''
-        + '}';
+  @JsonIgnore
+  public boolean canTaskTransitionToState(final TaskState newState) {
+
+    boolean canTransitionate = false;
+    switch (newState) {
+      case Completed, TimeOut:
+        if (taskState.equals(TaskState.Open)) {
+          canTransitionate = true;
+        }
+        break;
+
+        // TODO implement validation for other transitions
+      default:
+        canTransitionate = false;
+        //throw new RuntimeException(taskState + " to " + newState + " not implemented");
+    }
+
+    return canTransitionate;
+  }
+
+  @JsonIgnore
+  public boolean isClosed() {
+    return getTaskState().equals(TaskState.Completed)
+            || getTaskState().equals(TaskState.TimeOut);
   }
 
 
@@ -121,9 +132,9 @@ public class Task implements Serializable {
     private TaskState taskState;
     private Task previousState;
     private String result;
+    private Duration deadline;
 
-    public Builder() {
-    }
+    public Builder() {}
 
     public Builder id(final String val) {
       id = val;
@@ -152,6 +163,11 @@ public class Task implements Serializable {
 
     public Builder result(final String val) {
       result = val;
+      return this;
+    }
+
+    public Builder deadline(final Duration val) {
+      deadline = val;
       return this;
     }
 
