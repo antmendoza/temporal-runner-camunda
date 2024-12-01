@@ -46,7 +46,16 @@ public class UserTaskService {
         });
   }
 
-  public String userTask(UserTask userTask) {
+  /**
+   * Create a user task , managed by {@link com.antmendoza.temporal.usertask.advancedimplementation.usertasks.WorkflowTaskManager},
+   * and blocks until the task is completed
+   *
+   * This method will throw an exception {@link UserTaskTimeoutException} if the task has a deadline and it times out.
+   *
+   * @param userTask
+   * @return
+   */
+  public String createUserTask(UserTask userTask) {
 
     logger.info("Before creating task : {}", userTask);
 
@@ -85,7 +94,7 @@ public class UserTaskService {
     public void timeoutTask(final String taskToken) {
       final CompletablePromise<String> completablePromise = tasks.get(taskToken);
       completablePromise.completeExceptionally(
-          new UserTaskTimeoutException("something went wrong"));
+          new UserTaskTimeoutException("taskToken [" + taskToken + "]"));
     }
   }
 }

@@ -29,7 +29,7 @@ public class WorkflowWithTasksImpl implements WorkflowWithTasks {
         new UserTask.Builder().id(taskToken.getNext()).assignedTo("user1").title("TODO 1").build();
 
     // Block until the tasks is completed
-    final String taskResult = taskService.userTask(userTask);
+    final String taskResult = taskService.createUserTask(userTask);
     boolean isValid = taskResult.equals("approved");
 
     if (isValid) {

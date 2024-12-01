@@ -67,7 +67,7 @@ public class UserTask implements Serializable {
 
 
   @JsonIgnore
-  public UserTask withState(final UserTaskState userTaskState) {
+  UserTask withState(final UserTaskState userTaskState) {
     final UserTask newUserTask = cloneTaskAndStorePreviousState();
     newUserTask.userTaskState = userTaskState;
     return newUserTask;

@@ -37,7 +37,7 @@ public class WorkflowWithTaskWithDeadlineImpl implements WorkflowWithTasks {
               .build();
 
       // Block until the tasks is completed or deadline
-      final String taskResult = taskService.userTask(userTask);
+      final String taskResult = taskService.createUserTask(userTask);
       boolean isValid = taskResult.equals("approved");
 
       if (isValid) {
