@@ -10,16 +10,12 @@ import io.temporal.workflow.WorkflowMethod;
 @WorkflowInterface
 public interface UserTaskWorkflow {
 
+  @WorkflowMethod
+  String execute(WorkflowInput workflowInput);
 
-    @WorkflowMethod
-    String execute(WorkflowInput workflowInput);
+  @SignalMethod
+  void taskInput(TaskInput taskInput);
 
-
-    @SignalMethod
-    void taskInput(
-            TaskInput taskInput);
-
-
-    @QueryMethod
-    boolean taskCreated();
+  @QueryMethod
+  boolean taskCreated();
 }

@@ -24,54 +24,46 @@ import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
 import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TaskToken;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.Workflow;
+import java.time.Duration;
 import org.slf4j.Logger;
 
-import java.time.Duration;
-
-/**
- * Workflow that creates three task and waits for them to complete
- */
+/** Workflow that creates three task and waits for them to complete */
 public class WorkflowWithTasksImpl implements WorkflowWithTasks {
 
-    final GenerateTaskToken taskToken = new GenerateTaskToken();
-    private final Logger logger = Workflow.getLogger(WorkflowWithTasksImpl.class);
-    private final TaskService taskService = new TaskService();
-    private final Activities activities =
-            Workflow.newActivityStub(
-                    Activities.class,
-                    ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(2)).build());
+  final GenerateTaskToken taskToken = new GenerateTaskToken();
+  private final Logger logger = Workflow.getLogger(WorkflowWithTasksImpl.class);
+  private final TaskService taskService = new TaskService();
+  private final Activities activities =
+      Workflow.newActivityStub(
+          Activities.class,
+          ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(2)).build());
 
-    @Override
-    public String execute() {
+  @Override
+  public String execute() {
 
+    activities.activity1("some input");
 
-        activities.activity1("some input");
+    final Task task = new Task(taskToken.getNext(), "user1", "TODO 1");
 
+    // Block until the tasks is completed
+    final String taskResult = taskService.userTask(task);
+    boolean isValid = taskResult.equals("approved");
 
-        final Task task = new Task(taskToken.getNext(), "user1", "TODO 1");
-
-        //Block until the tasks is completed
-        final String taskResult = taskService.userTask(task);
-        boolean isValid = taskResult.equals("approved");
-
-        if (isValid) {
-            activities.activity2("other input 2");
-        } else {
-            activities.activity3("other input 3");
-        }
-
-
-        return "done";
+    if (isValid) {
+      activities.activity2("other input 2");
+    } else {
+      activities.activity3("other input 3");
     }
 
-    private static class GenerateTaskToken {
-        private int taskToken = 1;
+    return "done";
+  }
 
-        public String getNext() {
-            final String workflowId = Workflow.getInfo().getWorkflowId();
-            return new TaskToken(workflowId,
-                    "" + taskToken++).getToken();
-        }
+  private static class GenerateTaskToken {
+    private int taskToken = 1;
+
+    public String getNext() {
+      final String workflowId = Workflow.getInfo().getWorkflowId();
+      return new TaskToken(workflowId, "" + taskToken++).getToken();
     }
-
+  }
 }

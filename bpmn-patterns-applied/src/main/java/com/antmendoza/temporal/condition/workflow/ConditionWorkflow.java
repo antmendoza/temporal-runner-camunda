@@ -6,7 +6,6 @@ import io.temporal.workflow.WorkflowMethod;
 @WorkflowInterface
 public interface ConditionWorkflow {
 
-
-    @WorkflowMethod
-    String execute(String name);
+  @WorkflowMethod
+  String execute(String name);
 }

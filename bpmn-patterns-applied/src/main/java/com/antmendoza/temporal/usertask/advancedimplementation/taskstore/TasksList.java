@@ -3,7 +3,6 @@ package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskState;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,24 +10,22 @@ public class TasksList {
 
   private final List<Task> tasks = new ArrayList<>();
 
-  //Task whin changes that has not been processed by the workflow yet.
+  // Task whin changes that has not been processed by the workflow yet.
   private final List<Task> unprocessedAddedTasks = new ArrayList<>();
 
   public void addAll(final TasksList taskList) {
-    this.unprocessedAddedTasks.addAll(taskList != null ? taskList.unprocessedAddedTasks : new ArrayList<>());
+    this.unprocessedAddedTasks.addAll(
+        taskList != null ? taskList.unprocessedAddedTasks : new ArrayList<>());
     this.tasks.addAll(taskList != null ? taskList.tasks : new ArrayList<>());
   }
 
-  public TasksList() {
-  }
-
+  public TasksList() {}
 
   @JsonIgnore
   public void add(final Task task) {
     this.unprocessedAddedTasks.add(task);
     this.tasks.add(task);
   }
-
 
   @JsonIgnore
   public List<Task> getAll() {
@@ -60,7 +57,7 @@ public class TasksList {
         // TODO implement validation for other transitions
       default:
         canTransitionate = true;
-        //throw new RuntimeException(taskState + " to " + newState + " not implemented");
+        // throw new RuntimeException(taskState + " to " + newState + " not implemented");
     }
 
     return canTransitionate;
@@ -107,12 +104,13 @@ public class TasksList {
     return tasks;
   }
 
-
   @Override
   public String toString() {
-    return "TasksList{" +
-            "tasks=" + tasks +
-            ", unprocessedAddedTasks=" + unprocessedAddedTasks +
-            '}';
+    return "TasksList{"
+        + "tasks="
+        + tasks
+        + ", unprocessedAddedTasks="
+        + unprocessedAddedTasks
+        + '}';
   }
 }

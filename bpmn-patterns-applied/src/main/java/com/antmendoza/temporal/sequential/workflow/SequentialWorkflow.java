@@ -6,7 +6,6 @@ import io.temporal.workflow.WorkflowMethod;
 @WorkflowInterface
 public interface SequentialWorkflow {
 
-
-    @WorkflowMethod
-    String execute(String name);
+  @WorkflowMethod
+  String execute(String name);
 }

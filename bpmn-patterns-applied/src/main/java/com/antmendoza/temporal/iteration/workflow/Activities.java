@@ -6,15 +6,15 @@ import io.temporal.activity.ActivityMethod;
 @ActivityInterface
 public interface Activities {
 
-    @ActivityMethod
-    String prepareOrder(String input);
+  @ActivityMethod
+  String prepareOrder(String input);
 
-    @ActivityMethod
-    String preparePizza(String input);
+  @ActivityMethod
+  String preparePizza(String input);
 
-    @ActivityMethod
-    String bakePizza(String input, int numIterations);
+  @ActivityMethod
+  String bakePizza(String input, int numIterations);
 
-    @ActivityMethod
-    String deliverPizza(String input);
+  @ActivityMethod
+  String deliverPizza(String input);
 }

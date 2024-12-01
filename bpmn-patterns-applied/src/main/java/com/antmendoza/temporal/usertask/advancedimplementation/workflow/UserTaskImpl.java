@@ -47,14 +47,13 @@ public class UserTaskImpl implements UserTask {
             .setTaskQueue(taskQueue)
             .build();
 
-
     final Object[] workflowInput = {new TasksList()};
     final Object[] signalInput = {task};
     final String signalName = "addTask";
 
-    //Signal the workflow and start it if the workflow is not running
-    workflowClient.newUntypedWorkflowStub(WorkflowTaskManager.class.getSimpleName(),
-            workflowOptions ).signalWithStart(signalName, signalInput, workflowInput);
-
+    // Signal the workflow and start it if the workflow is not running
+    workflowClient
+        .newUntypedWorkflowStub(WorkflowTaskManager.class.getSimpleName(), workflowOptions)
+        .signalWithStart(signalName, signalInput, workflowInput);
   }
 }

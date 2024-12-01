@@ -2,7 +2,6 @@ package com.antmendoza.temporal.usertask.advancedimplementation.taskstore;
 
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
 import io.temporal.workflow.*;
-
 import java.util.List;
 
 @WorkflowInterface

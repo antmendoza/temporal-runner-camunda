@@ -23,11 +23,10 @@ import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.CompletablePromise;
 import io.temporal.workflow.Workflow;
-import org.slf4j.Logger;
-
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
 
 /**
  * This class responsibility is to register the task in the external system and waits for the
@@ -37,7 +36,7 @@ public class TaskService {
 
   private final UserTask userTask =
       Workflow.newActivityStub(
-              UserTask.class,
+          UserTask.class,
           ActivityOptions.newBuilder().setStartToCloseTimeout(Duration.ofSeconds(5)).build());
 
   private TaskManager tasksManager = new TaskManager();
@@ -84,9 +83,7 @@ public class TaskService {
       // Wait promise to complete
       String result = promise.get();
 
-
       return task.withResult(result);
-
     }
 
     public void completeTask(final String taskToken, String result) {

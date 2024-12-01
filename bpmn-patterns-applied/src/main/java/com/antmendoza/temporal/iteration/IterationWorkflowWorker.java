@@ -1,5 +1,6 @@
 package com.antmendoza.temporal.iteration;
 
+import static com.antmendoza.temporal.iteration.IterationWorkflowClient.TASK_QUEUE;
 
 import com.antmendoza.temporal.iteration.workflow.ActivitiesImpl;
 import com.antmendoza.temporal.iteration.workflow.IterationWorkflowImpl;
@@ -8,39 +9,31 @@ import io.temporal.serviceclient.WorkflowServiceStubs;
 import io.temporal.worker.Worker;
 import io.temporal.worker.WorkerFactory;
 
-import static com.antmendoza.temporal.iteration.IterationWorkflowClient.TASK_QUEUE;
-
-
 public class IterationWorkflowWorker {
 
+  public static void main(String[] args) {
 
-    public static void main(String[] args) {
+    WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
 
-        WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
+    WorkflowClient client = WorkflowClient.newInstance(service);
 
-        WorkflowClient client = WorkflowClient.newInstance(service);
+    WorkerFactory factory = WorkerFactory.newInstance(client);
 
-        WorkerFactory factory = WorkerFactory.newInstance(client);
+    Worker worker = factory.newWorker(TASK_QUEUE);
 
+    /*
+     * Register our workflow implementation with the worker.
+     * Workflow implementations must be known to the worker at runtime in
+     * order to dispatch workflow tasks.
+     */
+    worker.registerWorkflowImplementationTypes(IterationWorkflowImpl.class);
 
-        Worker worker = factory.newWorker(TASK_QUEUE);
+    /*
+     * Register our Activity Types with the Worker. Since Activities are stateless and thread-safe,
+     * the Activity Type is a shared instance.
+     */
+    worker.registerActivitiesImplementations(new ActivitiesImpl());
 
-        /*
-         * Register our workflow implementation with the worker.
-         * Workflow implementations must be known to the worker at runtime in
-         * order to dispatch workflow tasks.
-         */
-        worker.registerWorkflowImplementationTypes(IterationWorkflowImpl.class);
-
-        /*
-         * Register our Activity Types with the Worker. Since Activities are stateless and thread-safe,
-         * the Activity Type is a shared instance.
-         */
-        worker.registerActivitiesImplementations(new ActivitiesImpl());
-
-
-        factory.start();
-
-
-    }
+    factory.start();
+  }
 }

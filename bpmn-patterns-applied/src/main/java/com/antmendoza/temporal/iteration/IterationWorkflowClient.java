@@ -1,6 +1,5 @@
 package com.antmendoza.temporal.iteration;
 
-
 import com.antmendoza.temporal.iteration.workflow.IterationWorkflow;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -12,18 +11,16 @@ public class IterationWorkflowClient {
 
   static final String WORKFLOW_ID = "IterationWorkflowClientWorkflow";
 
-
   public static void main(String[] args) {
 
     WorkflowServiceStubs service = WorkflowServiceStubs.newLocalServiceStubs();
 
     WorkflowClient client = WorkflowClient.newInstance(service);
 
-
     // Create the workflow client stub. It is used to start our workflow execution.
     IterationWorkflow workflow =
         client.newWorkflowStub(
-                IterationWorkflow.class,
+            IterationWorkflow.class,
             WorkflowOptions.newBuilder()
                 .setWorkflowId(WORKFLOW_ID)
                 .setTaskQueue(TASK_QUEUE)
