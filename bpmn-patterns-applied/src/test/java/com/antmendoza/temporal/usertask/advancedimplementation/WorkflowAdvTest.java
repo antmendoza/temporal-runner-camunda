@@ -6,7 +6,7 @@ import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 import com.antmendoza.temporal.usertask.activities.Activities;
 import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.*;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.*;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.*;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetask.WorkflowWithTasksImpl;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetaskwithdeadline.WorkflowWithTaskWithDeadlineImpl;
@@ -71,13 +71,13 @@ public class WorkflowAdvTest {
     final WorkflowTaskManager workflowTaskManager = getWorkflowTaskManager(workflowClient);
     waitUntilTaskManagerHasTasks(workflowTaskManager);
 
-    Assert.assertEquals(1, workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS).size());
+    Assert.assertEquals(1, workflowTaskManager.getPendingTasks(UserTaskFilter.OPEN_TASKS).size());
 
-    final List<Task> tasks = workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS);
+    final List<UserTask> userTasks = workflowTaskManager.getPendingTasks(UserTaskFilter.OPEN_TASKS);
 
-    logger.info("-> tasks {}", tasks);
+    logger.info("-> tasks {}", userTasks);
 
-    tasks.forEach(
+    userTasks.forEach(
         task -> {
           final CompleteTaskRequest newState = new CompleteTaskRequest(task.getId(), "approved");
           logger.info("completing task {}", task.getId());
@@ -89,7 +89,7 @@ public class WorkflowAdvTest {
     Assert.assertNotNull(result);
     Assert.assertEquals("done", result);
 
-    Assert.assertEquals(0, workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS).size());
+    Assert.assertEquals(0, workflowTaskManager.getPendingTasks(UserTaskFilter.OPEN_TASKS).size());
   }
 
   @Test
@@ -132,7 +132,7 @@ public class WorkflowAdvTest {
     final WorkflowTaskManager workflowTaskManager = getWorkflowTaskManager(workflowClient);
     waitUntilTaskManagerHasTasks(workflowTaskManager);
 
-    Assert.assertEquals(1, workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS).size());
+    Assert.assertEquals(1, workflowTaskManager.getPendingTasks(UserTaskFilter.OPEN_TASKS).size());
 
     // Do not complete tasks and wait for task deadline
     testWorkflowRule.getTestEnvironment().sleep(Duration.ofSeconds(5));
@@ -145,7 +145,7 @@ public class WorkflowAdvTest {
     verify(activities, times(1)).activity4("other input 4");
 
     // Task will be removed automatically from open tasks
-    Assert.assertEquals(0, workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS).size());
+    Assert.assertEquals(0, workflowTaskManager.getPendingTasks(UserTaskFilter.OPEN_TASKS).size());
   }
 
   private static TestWorkflowRule.Builder getBuilder() {
@@ -162,11 +162,12 @@ public class WorkflowAdvTest {
     for (int i = 0; i < 5; i++) {
       try {
 
-        final List<Task> allTasks = workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS);
+        final List<UserTask> allUserTasks =
+            workflowTaskManager.getPendingTasks(UserTaskFilter.OPEN_TASKS);
 
-        logger.info("allTasks {}", allTasks);
+        logger.info("allTasks {}", allUserTasks);
 
-        if (!allTasks.isEmpty()) {
+        if (!allUserTasks.isEmpty()) {
           return;
         }
       } catch (Exception ignored) {

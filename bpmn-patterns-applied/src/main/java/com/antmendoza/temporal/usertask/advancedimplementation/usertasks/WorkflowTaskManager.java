@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.tasks;
+package com.antmendoza.temporal.usertask.advancedimplementation.usertasks;
 
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.CompleteTaskRequest;
 import io.temporal.workflow.*;
@@ -10,10 +10,10 @@ public interface WorkflowTaskManager {
   String WORKFLOW_ID = WorkflowTaskManager.class.getSimpleName();
 
   @WorkflowMethod
-  void run(TasksList taskListService);
+  void run(UserTasksList taskListService);
 
   @SignalMethod
-  void addTask(Task task);
+  void addTask(UserTask userTask);
 
   @UpdateValidatorMethod(updateName = "completeTask")
   void validateCompleteTask(CompleteTaskRequest changeTaskRequest);
@@ -22,5 +22,5 @@ public interface WorkflowTaskManager {
   void completeTask(CompleteTaskRequest changeTaskRequest);
 
   @QueryMethod
-  List<Task> getPendingTasks(final TaskFilter taskPredicate);
+  List<UserTask> getPendingTasks(final UserTaskFilter taskPredicate);
 }

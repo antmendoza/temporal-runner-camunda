@@ -1,8 +1,8 @@
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetaskwithdeadline;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.TaskFilter;
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.WorkflowTaskManager;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.UserTask;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.UserTaskFilter;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.WorkflowTaskManager;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.WorkflowWithTasks;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -58,15 +58,15 @@ public class AdvUserTaskWorkflowClient {
     System.exit(0);
   }
 
-  private static List<Task> getAllTasks(final WorkflowClient client) {
+  private static List<UserTask> getAllTasks(final WorkflowClient client) {
 
     try {
 
-      final List<Task> allTasks =
+      final List<UserTask> allUserTasks =
           client
               .newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID)
-              .getPendingTasks(TaskFilter.OPEN_TASKS);
-      return allTasks;
+              .getPendingTasks(UserTaskFilter.OPEN_TASKS);
+      return allUserTasks;
     } catch (Exception e) {
       System.out.println("Start the worker ... " + e);
       // workflow not started, start the worker

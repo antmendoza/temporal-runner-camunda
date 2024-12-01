@@ -1,4 +1,4 @@
-package com.antmendoza.temporal.usertask.advancedimplementation.tasks;
+package com.antmendoza.temporal.usertask.advancedimplementation.usertasks;
 
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.*;
 import io.temporal.failure.ApplicationFailure;
@@ -13,12 +13,12 @@ import org.slf4j.Logger;
 public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
   private final Logger logger = Workflow.getLogger(WorkflowTaskManagerImpl.class.getName());
 
-  private final TasksList taskListService = new TasksList();
+  private final UserTasksList taskListService = new UserTasksList();
 
   private final Map<String, CancellationScope> timers = new HashMap();
 
   @Override
-  public void run(TasksList taskList) {
+  public void run(UserTasksList taskList) {
 
     this.taskListService.addAll(taskList);
 
@@ -27,15 +27,15 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
       // Wait until there are pending task to process
       Workflow.await(this.taskListService::hasUnprocessedTasks);
 
-      final Task unprocessedTask = this.taskListService.getNextUnprocessedTask();
-      logger.info("Processing task {}", unprocessedTask);
+      final UserTask unprocessedUserTask = this.taskListService.getNextUnprocessedTask();
+      logger.info("Processing task {}", unprocessedUserTask);
 
-      scheduleTimerIfDeadline(unprocessedTask);
+      scheduleTimerIfDeadline(unprocessedUserTask);
 
-      notifyAssignedToHasChanged(unprocessedTask);
+      notifyAssignedToHasChanged(unprocessedUserTask);
 
-      if (unprocessedTask.isClosed()) {
-        notifyClient(unprocessedTask);
+      if (unprocessedUserTask.isClosed()) {
+        notifyClient(unprocessedUserTask);
       }
     }
 
@@ -45,23 +45,23 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
   }
 
   @Override
-  public void addTask(Task task) {
-    this.taskListService.add(task);
+  public void addTask(UserTask userTask) {
+    this.taskListService.add(userTask);
   }
 
   @Override
   public void validateCompleteTask(CompleteTaskRequest changeTaskRequest) {
 
     final String taskId = changeTaskRequest.taskId();
-    final TaskState completed = TaskState.Completed;
+    final UserTaskState completed = UserTaskState.Completed;
     if (!taskListService.getTask(taskId).canTaskTransitionToState(completed)) {
-      final TaskState taskState = taskListService.getTask(taskId).getTaskState();
+      final UserTaskState userTaskState = taskListService.getTask(taskId).getUserTaskState();
       throw new RuntimeException(
           "Task with id ["
               + taskId
               + "], "
               + "with state ["
-              + taskState
+              + userTaskState
               + "], can not transition to "
               + completed);
     }
@@ -74,23 +74,23 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
   }
 
   @Override
-  public List<Task> getPendingTasks(final TaskFilter taskFilter) {
-    return taskListService.getTasks(taskFilter);
+  public List<UserTask> getPendingTasks(final UserTaskFilter userTaskFilter) {
+    return taskListService.getTasks(userTaskFilter);
   }
 
-  private void notifyClient(final Task task) {
+  private void notifyClient(final UserTask userTask) {
     try {
 
-      logger.debug("task: " + task);
-      final String taskId = task.getId();
-      final String externalWorkflowId = new TaskToken(taskId).getWorkflowId();
+      logger.debug("task: " + userTask);
+      final String taskId = userTask.getId();
+      final String externalWorkflowId = new UserTaskToken(taskId).getWorkflowId();
 
       logger.debug("externalWorkflowId: " + externalWorkflowId);
 
-      final TaskClient taskClient =
-          Workflow.newExternalWorkflowStub(TaskClient.class, externalWorkflowId);
+      final UserTaskClient taskClient =
+          Workflow.newExternalWorkflowStub(UserTaskClient.class, externalWorkflowId);
 
-      if (task.getTaskState().equals(TaskState.Completed)) {
+      if (userTask.getUserTaskState().equals(UserTaskState.Completed)) {
 
         // cancel timer
         if (timers.containsKey(taskId)) {
@@ -98,9 +98,9 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
           timers.remove(taskId);
         }
 
-        taskClient.completeTaskByToken(taskId, task.getResult());
+        taskClient.completeTaskByToken(taskId, userTask.getResult());
       }
-      if (task.getTaskState().equals(TaskState.TimeOut)) {
+      if (userTask.getUserTaskState().equals(UserTaskState.TimeOut)) {
         taskClient.timeOutTaskByToken(taskId);
       }
 
@@ -109,32 +109,32 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
     }
   }
 
-  private void notifyAssignedToHasChanged(final Task task) {
-    Task previousTask = task.getPreviousState();
-    logger.info("Processing previousTask {}", previousTask);
+  private void notifyAssignedToHasChanged(final UserTask userTask) {
+    UserTask previousUserTask = userTask.getPreviousState();
+    logger.info("Processing previousTask {}", previousUserTask);
     // notify the user...
-    if (previousTask != null
-        && !Objects.equals(task.getAssignedTo(), previousTask.getAssignedTo())) {
+    if (previousUserTask != null
+        && !Objects.equals(userTask.getAssignedTo(), previousUserTask.getAssignedTo())) {
       // Notify use task.getAssignedTo()
     }
   }
 
-  private void scheduleTimerIfDeadline(final Task task) {
-    if (task.getDeadline() != null && !timers.containsKey(task.getId())) {
+  private void scheduleTimerIfDeadline(final UserTask userTask) {
+    if (userTask.getDeadline() != null && !timers.containsKey(userTask.getId())) {
 
       CancellationScope cancelableScope =
           Workflow.newCancellationScope(
               () -> {
-                Workflow.newTimer(task.getDeadline())
+                Workflow.newTimer(userTask.getDeadline())
                     .thenApply(
                         t -> {
-                          taskListService.timeoutTask(task);
+                          taskListService.timeoutTask(userTask);
                           return null;
                         });
               });
 
       cancelableScope.run();
-      timers.put(task.getId(), cancelableScope);
+      timers.put(userTask.getId(), cancelableScope);
     }
   }
 }

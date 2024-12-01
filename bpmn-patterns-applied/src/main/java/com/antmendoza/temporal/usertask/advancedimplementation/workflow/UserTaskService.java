@@ -1,26 +1,8 @@
-/*
- *  Copyright (c) 2020 Temporal Technologies, Inc. All Rights Reserved
- *
- *  Copyright 2012-2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
- *
- *  Modifications copyright (C) 2017 Uber Technologies, Inc.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"). You may not
- *  use this file except in compliance with the License. A copy of the License is
- *  located at
- *
- *  http://aws.amazon.com/apache2.0
- *
- *  or in the "license" file accompanying this file. This file is distributed on
- *  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
- *  express or implied. See the License for the specific language governing
- *  permissions and limitations under the License.
- */
-
 package com.antmendoza.temporal.usertask.advancedimplementation.workflow;
 
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.Task;
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.TaskTimeoutException;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.UserTask;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.UserTaskClient;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.UserTaskTimeoutException;
 import io.temporal.activity.ActivityOptions;
 import io.temporal.workflow.CompletablePromise;
 import io.temporal.workflow.Workflow;
@@ -33,7 +15,7 @@ import org.slf4j.Logger;
  * This class responsibility is to register the task in the external system and waits for the
  * external system to signal back.
  */
-public class TaskService {
+public class UserTaskService {
 
   // Can be local activity
   private final ActivityUserTask userTask =
@@ -43,13 +25,13 @@ public class TaskService {
 
   private TaskManager tasksManager = new TaskManager();
 
-  private final Logger logger = Workflow.getLogger(TaskService.class);
+  private final Logger logger = Workflow.getLogger(UserTaskService.class);
 
-  public TaskService() {
+  public UserTaskService() {
 
     // This listener exposes a signal method that clients use to notify the task has been completed
     Workflow.registerListener(
-        new TaskClient() {
+        new UserTaskClient() {
           @Override
           public void completeTaskByToken(final String taskToken, final String result) {
             logger.info("Completing task with token: " + taskToken);
@@ -64,19 +46,19 @@ public class TaskService {
         });
   }
 
-  public String userTask(Task task) {
+  public String userTask(UserTask userTask) {
 
-    logger.info("Before creating task : {}", task);
+    logger.info("Before creating task : {}", userTask);
 
     // Activity implementation is responsible for registering the task to the external service
     // (which is responsible for managing the task life-cycle)
-    userTask.createTask(task);
+    this.userTask.createTask(userTask);
 
-    logger.info("Task created: {}", task);
+    logger.info("Task created: {}", userTask);
 
-    String result = tasksManager.waitForTaskCompletion(task).getResult();
+    String result = tasksManager.waitForTaskCompletion(userTask).getResult();
 
-    logger.info("Task completed: {} result: {}", task, result);
+    logger.info("Task completed: {} result: {}", userTask, result);
 
     return result;
   }
@@ -85,13 +67,13 @@ public class TaskService {
 
     private final Map<String, CompletablePromise<String>> tasks = new HashMap<>();
 
-    public Task waitForTaskCompletion(final Task task) {
+    public UserTask waitForTaskCompletion(final UserTask userTask) {
       final CompletablePromise<String> promise = Workflow.newPromise();
-      tasks.put(task.getId(), promise);
+      tasks.put(userTask.getId(), promise);
       // Wait promise to complete
       String result = promise.get();
 
-      return task.withResult(result);
+      return userTask.withResult(result);
     }
 
     public void completeTask(final String taskToken, String result) {
@@ -102,7 +84,8 @@ public class TaskService {
 
     public void timeoutTask(final String taskToken) {
       final CompletablePromise<String> completablePromise = tasks.get(taskToken);
-      completablePromise.completeExceptionally(new TaskTimeoutException("something went wrong"));
+      completablePromise.completeExceptionally(
+          new UserTaskTimeoutException("something went wrong"));
     }
   }
 }

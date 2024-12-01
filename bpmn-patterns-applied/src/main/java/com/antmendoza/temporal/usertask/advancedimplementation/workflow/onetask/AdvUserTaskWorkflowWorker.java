@@ -3,7 +3,7 @@ package com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetask
 import static com.antmendoza.temporal.usertask.advancedimplementation.workflow.onetask.AdvUserTaskWorkflowClient.TASK_QUEUE;
 
 import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.tasks.WorkflowTaskManagerImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.usertasks.WorkflowTaskManagerImpl;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ActivityUserTaskImpl;
 import io.temporal.client.WorkflowClient;
 import io.temporal.serviceclient.WorkflowServiceStubs;
