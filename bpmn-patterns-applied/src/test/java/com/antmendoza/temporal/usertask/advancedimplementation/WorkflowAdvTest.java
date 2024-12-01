@@ -1,9 +1,7 @@
 package com.antmendoza.temporal.usertask.advancedimplementation;
 
 import com.antmendoza.temporal.usertask.activities.ActivitiesImpl;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManager;
-import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManagerImpl;
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.*;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.*;
 import io.temporal.client.WorkflowClient;
 import io.temporal.client.WorkflowOptions;
@@ -71,7 +69,7 @@ public class WorkflowAdvTest {
         final WorkflowTaskManager workflowTaskManager = getWorkflowTaskManager(workflowClient);
         waitUntilTaskManagerHasTasks(workflowTaskManager);
 
-        final List<Task> tasks = workflowTaskManager.getPendingTasks();
+        final List<Task> tasks = workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS);
 
         logger.info("tasks {}", tasks);
 
@@ -86,7 +84,7 @@ public class WorkflowAdvTest {
         Assert.assertNotNull(result);
         Assert.assertEquals("done", result);
 
-        Assert.assertEquals(0, workflowTaskManager.getPendingTasks().size());
+        Assert.assertEquals(0, workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS).size());
 
     }
 
@@ -106,17 +104,17 @@ public class WorkflowAdvTest {
 
     }
 
-    private static boolean waitUntilTaskManagerHasTasks(final WorkflowTaskManager workflowTaskManager) {
+    private static void waitUntilTaskManagerHasTasks(final WorkflowTaskManager workflowTaskManager) {
 
         for (int i = 0; i < 5; i++) {
             try {
 
-                final List<Task> allTasks = workflowTaskManager.getPendingTasks();
+                final List<Task> allTasks = workflowTaskManager.getPendingTasks(TaskFilter.OPEN_TASKS);
 
                 logger.info("allTasks {}", allTasks);
 
                 if (!allTasks.isEmpty()) {
-                    return true;
+                    return;
                 }
             } catch (Exception ignored) {
             }
@@ -127,12 +125,12 @@ public class WorkflowAdvTest {
             }
         }
 
-        return false;
     }
 
     private static WorkflowTaskManager getWorkflowTaskManager(final WorkflowClient workflowClient) {
         return workflowClient.newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID);
     }
+
 
 
 }

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.Objects;
 import org.apache.commons.lang3.SerializationUtils;
 
+
 public class Task implements Serializable {
   private String id;
   private String title;
@@ -22,7 +23,16 @@ public class Task implements Serializable {
     this.id = id;
     this.assignedTo = assignedTo;
     this.title = title;
-    this.taskState = TaskState.New;
+    this.taskState = TaskState.Open;
+  }
+
+  private Task(final Builder builder) {
+    id = builder.id;
+    title = builder.title;
+    assignedTo = builder.assignedTo;
+    taskState = builder.taskState;
+    previousState = builder.previousState;
+    result = builder.result;
   }
 
   public String getTitle() {
@@ -101,5 +111,52 @@ public class Task implements Serializable {
         + result
         + '\''
         + '}';
+  }
+
+
+  public static final class Builder {
+    private String id;
+    private String title;
+    private String assignedTo;
+    private TaskState taskState;
+    private Task previousState;
+    private String result;
+
+    public Builder() {
+    }
+
+    public Builder id(final String val) {
+      id = val;
+      return this;
+    }
+
+    public Builder title(final String val) {
+      title = val;
+      return this;
+    }
+
+    public Builder assignedTo(final String val) {
+      assignedTo = val;
+      return this;
+    }
+
+    public Builder taskState(final TaskState val) {
+      taskState = val;
+      return this;
+    }
+
+    public Builder previousState(final Task val) {
+      previousState = val;
+      return this;
+    }
+
+    public Builder result(final String val) {
+      result = val;
+      return this;
+    }
+
+    public Task build() {
+      return new Task(this);
+    }
   }
 }

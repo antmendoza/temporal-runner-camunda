@@ -1,5 +1,6 @@
 package com.antmendoza.temporal.usertask.advancedimplementation;
 
+import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.TaskFilter;
 import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.Task;
 import com.antmendoza.temporal.usertask.advancedimplementation.taskstore.WorkflowTaskManager;
 import com.antmendoza.temporal.usertask.advancedimplementation.workflow.ChangeTaskRequest;
@@ -64,7 +65,7 @@ public class AdvUserTaskWorkflowClient {
       final List<Task> allTasks =
           client
               .newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID)
-              .getPendingTasks();
+              .getPendingTasks(TaskFilter.OPEN_TASKS);
       return allTasks;
     } catch (Exception e) {
       System.out.println("Start the worker ... " + e);

@@ -5,6 +5,7 @@ import io.temporal.failure.ApplicationFailure;
 import io.temporal.workflow.Workflow;
 import java.util.List;
 import java.util.Objects;
+
 import org.slf4j.Logger;
 
 public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
@@ -89,7 +90,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
   }
 
   @Override
-  public List<Task> getPendingTasks() {
-    return taskListService.getPendingTasks();
+  public List<Task> getPendingTasks(final TaskFilter taskFilter) {
+    return taskListService.getTasks(taskFilter);
   }
 }

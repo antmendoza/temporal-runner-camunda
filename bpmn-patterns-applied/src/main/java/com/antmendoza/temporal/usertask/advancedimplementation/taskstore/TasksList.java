@@ -5,7 +5,7 @@ import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskStat
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.function.Predicate;
 
 public class TasksList {
 
@@ -41,7 +41,7 @@ public class TasksList {
     final TaskState newState = changeTaskRequest.newState();
     switch (newState) {
       case Completed:
-        if (taskState.equals(TaskState.New)) {
+        if (taskState.equals(TaskState.Open)) {
           canTransitionate = true;
         }
         break;
@@ -96,8 +96,9 @@ public class TasksList {
   }
 
 
-  public List<Task> getPendingTasks() {
-    return allTasks.stream().filter(t -> !t.getTaskState().equals(TaskState.Completed)).toList();
+  @JsonIgnore
+  public List<Task> getTasks(final Predicate<Task> taskPredicate) {
+    return allTasks.stream().filter(taskPredicate).toList();
   }
 
   @Override
@@ -109,4 +110,5 @@ public class TasksList {
         + unprocessedAddedTasks
         + '}';
   }
+
 }
