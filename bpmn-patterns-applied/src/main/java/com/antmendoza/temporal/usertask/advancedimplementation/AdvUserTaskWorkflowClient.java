@@ -64,7 +64,7 @@ public class AdvUserTaskWorkflowClient {
       final List<Task> allTasks =
           client
               .newWorkflowStub(WorkflowTaskManager.class, WorkflowTaskManager.WORKFLOW_ID)
-              .getAllTasks();
+              .getPendingTasks();
       return allTasks;
     } catch (Exception e) {
       System.out.println("Start the worker ... " + e);

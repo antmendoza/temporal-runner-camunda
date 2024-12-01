@@ -89,7 +89,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
   }
 
   @Override
-  public List<Task> getAllTasks() {
-    return taskListService.getTasks();
+  public List<Task> getPendingTasks() {
+    return taskListService.getPendingTasks();
   }
 }

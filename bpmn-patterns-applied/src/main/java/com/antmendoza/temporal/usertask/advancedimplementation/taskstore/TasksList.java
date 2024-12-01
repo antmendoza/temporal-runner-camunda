@@ -5,10 +5,11 @@ import com.antmendoza.temporal.usertask.advancedimplementation.workflow.TaskStat
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TasksList {
 
-  private final List<Task> tasks = new ArrayList<>();
+  private final List<Task> allTasks = new ArrayList<>();
 
   // Task whin changes that has not been processed by the workflow yet.
   private final List<Task> unprocessedAddedTasks = new ArrayList<>();
@@ -16,7 +17,7 @@ public class TasksList {
   public void addAll(final TasksList taskList) {
     this.unprocessedAddedTasks.addAll(
         taskList != null ? taskList.unprocessedAddedTasks : new ArrayList<>());
-    this.tasks.addAll(taskList != null ? taskList.tasks : new ArrayList<>());
+    this.allTasks.addAll(taskList != null ? taskList.allTasks : new ArrayList<>());
   }
 
   public TasksList() {}
@@ -24,12 +25,12 @@ public class TasksList {
   @JsonIgnore
   public void add(final Task task) {
     this.unprocessedAddedTasks.add(task);
-    this.tasks.add(task);
+    this.allTasks.add(task);
   }
 
   @JsonIgnore
   public List<Task> getAll() {
-    return this.tasks;
+    return this.allTasks;
   }
 
   @JsonIgnore
@@ -39,25 +40,15 @@ public class TasksList {
     boolean canTransitionate = false;
     final TaskState newState = changeTaskRequest.newState();
     switch (newState) {
-      case Assigned:
-        if (taskState.equals(TaskState.New)
-            || taskState.equals(TaskState.Unclaimed)
-            || taskState.equals(TaskState.Assigned)) {
+      case Completed:
+        if (taskState.equals(TaskState.New)) {
           canTransitionate = true;
         }
         break;
 
-      case Unclaimed:
-        if (taskState.equals(TaskState.New)
-            || taskState.equals(TaskState.Assigned)
-            || taskState.equals(TaskState.Unclaimed)) {
-          canTransitionate = true;
-        }
-        break;
         // TODO implement validation for other transitions
       default:
-        canTransitionate = true;
-        // throw new RuntimeException(taskState + " to " + newState + " not implemented");
+          throw new RuntimeException(taskState + " to " + newState + " not implemented");
     }
 
     return canTransitionate;
@@ -65,7 +56,7 @@ public class TasksList {
 
   @JsonIgnore
   public Task getTask(final String taskId) {
-    return this.tasks.stream().filter(t -> t.getId().equals(taskId)).findFirst().get();
+    return this.allTasks.stream().filter(t -> t.getId().equals(taskId)).findFirst().get();
   }
 
   @JsonIgnore
@@ -100,15 +91,20 @@ public class TasksList {
     return unprocessedAddedTasks.remove(unprocessedAddedTasks.size() - 1);
   }
 
-  public List<Task> getTasks() {
-    return tasks;
+  public List<Task> getAllTasks() {
+    return allTasks;
+  }
+
+
+  public List<Task> getPendingTasks() {
+    return allTasks.stream().filter(t -> !t.getTaskState().equals(TaskState.Completed)).toList();
   }
 
   @Override
   public String toString() {
     return "TasksList{"
         + "tasks="
-        + tasks
+        + allTasks
         + ", unprocessedAddedTasks="
         + unprocessedAddedTasks
         + '}';

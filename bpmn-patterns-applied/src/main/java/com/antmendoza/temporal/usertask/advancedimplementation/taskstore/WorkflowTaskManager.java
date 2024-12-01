@@ -22,5 +22,5 @@ public interface WorkflowTaskManager {
   void changeTaskStateTo(ChangeTaskRequest changeTaskRequest);
 
   @QueryMethod
-  List<Task> getAllTasks();
+  List<Task> getPendingTasks();
 }

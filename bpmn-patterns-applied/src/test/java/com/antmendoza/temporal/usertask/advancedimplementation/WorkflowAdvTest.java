@@ -69,7 +69,9 @@ public class WorkflowAdvTest {
 
 
         final WorkflowTaskManager workflowTaskManager = getWorkflowTaskManager(workflowClient);
-        final List<Task> tasks = getAllTasks(workflowTaskManager);
+        waitUntilTaskManagerHasTasks(workflowTaskManager);
+
+        final List<Task> tasks = workflowTaskManager.getPendingTasks();
 
         logger.info("tasks {}", tasks);
 
@@ -83,6 +85,9 @@ public class WorkflowAdvTest {
 
         Assert.assertNotNull(result);
         Assert.assertEquals("done", result);
+
+        Assert.assertEquals(0, workflowTaskManager.getPendingTasks().size());
+
     }
 
 
@@ -101,17 +106,17 @@ public class WorkflowAdvTest {
 
     }
 
-    private static List<Task> getAllTasks(final WorkflowTaskManager workflowTaskManager) {
+    private static boolean waitUntilTaskManagerHasTasks(final WorkflowTaskManager workflowTaskManager) {
 
         for (int i = 0; i < 5; i++) {
             try {
 
-                final List<Task> allTasks = workflowTaskManager.getAllTasks();
+                final List<Task> allTasks = workflowTaskManager.getPendingTasks();
 
                 logger.info("allTasks {}", allTasks);
 
                 if (!allTasks.isEmpty()) {
-                    return allTasks;
+                    return true;
                 }
             } catch (Exception ignored) {
             }
@@ -122,7 +127,7 @@ public class WorkflowAdvTest {
             }
         }
 
-        return null;
+        return false;
     }
 
     private static WorkflowTaskManager getWorkflowTaskManager(final WorkflowClient workflowClient) {
